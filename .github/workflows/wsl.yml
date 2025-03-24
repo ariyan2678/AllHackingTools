@@ -1,0 +1,34 @@
+name: Storm-Breaker Setup and Run
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  setup-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Clone Storm-Breaker
+      run: git clone https://github.com/ultrasecurity/Storm-Breaker.git
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        cd Storm-Breaker
+        sudo bash install.sh
+        sudo python3 -m pip install --upgrade pip
+        sudo python3 -m pip install -r requirements.txt
+
+    - name: Run Storm-Breaker
+      run: |
+        cd Storm-Breaker
+        sudo python3 st.py
